@@ -1,16 +1,21 @@
 import logo from './logo.svg';
 import './App.css';
 import VoiceRecorder from './component/VoiceRecord';
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import { useWeb3Modal } from '@web3modal/wagmi/react'
 function App() {
   const [isRegistered, setIsRegistered] = useState(false);
-
+  const { open, close } = useWeb3Modal()
   const handleRegister = () => {
       setIsRegistered(true);
   };
 
   console.log('isRegistered', isRegistered)
+
+  useEffect(() => {
+    if(isRegistered) open()
+  }, [isRegistered])
+  
 
   return (
     <div className="App">
@@ -26,6 +31,7 @@ function App() {
           
           <h1>{isRegistered ? 'Login' : 'Register'}</h1>
             <VoiceRecorder isRegistered={isRegistered} onRegister={handleRegister} />
+            {/* <w3m-button /> */}
         {/* <VoiceRecorder /> */}
         </div>
         

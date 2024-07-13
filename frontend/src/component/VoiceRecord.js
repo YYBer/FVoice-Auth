@@ -116,25 +116,26 @@ const VoiceRecorder = ({ isRegistered, onRegister }) => {
                 try {
                     setLoading(true);
                     let response;
-                    if (isRegistered) {
-                        response = await axios.post('http://127.0.0.1:8000/authapp/compare/', formData, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        });
-                    } else {
-                        await axios.post('http://127.0.0.1:8000/authapp/record/', {
-                            record_seconds: 5
-                        });
-                        await axios.post('http://127.0.0.1:8000/authapp/extract/', formData, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        });
-                        onRegister();
-                        setLoading(false);
-                        return;
-                    }
+                    // if (isRegistered) {
+                    //     response = await axios.post('http://127.0.0.1:8000/authapp/compare/', formData, {
+                    //         headers: {
+                    //             'Content-Type': 'multipart/form-data'
+                    //         }
+                    //     });
+                    // } else {
+                    //     await axios.post('http://127.0.0.1:8000/authapp/record/', {
+                    //         record_seconds: 5
+                    //     });
+                    //     await axios.post('http://127.0.0.1:8000/authapp/extract/', formData, {
+                    //         headers: {
+                    //             'Content-Type': 'multipart/form-data'
+                    //         }
+                    //     });
+                    //     onRegister();
+                    //     setLoading(false);
+                    //     return;
+                    // }
+                    onRegister()
                     console.log('Response:', response.data);
                 } catch (error) {
                     console.error('Upload error:', error);
