@@ -24,5 +24,5 @@ def extract_mfcc(file_path, n_mfcc=13):
 if __name__ == "__main__":
     file_path = "output4.wav"
     mfcc_features = extract_mfcc(file_path)
-    np.save("voiceprint4.npy", mfcc_features)
+    np.save("voiceprint5.npy", mfcc_features)
     print(f"Extracted MFCC features: {mfcc_features}")
