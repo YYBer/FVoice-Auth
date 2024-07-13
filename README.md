@@ -1,3 +1,5 @@
+This is Ethglobal Brussels 2024 project
+
 1. Generate a Voiceprint
 A voiceprint is a unique representation of a person's voice, typically extracted using feature extraction techniques from a voice sample.
 2. Encrypt the Voiceprint with FHE
