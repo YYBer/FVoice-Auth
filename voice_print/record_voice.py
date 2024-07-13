@@ -1,13 +1,3 @@
-# import librosa
-# import numpy as np
-
-# def extract_voiceprint(audio_path):
-#     y, sr = librosa.load(audio_path, sr=None)
-#     mfccs = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
-#     voiceprint = np.mean(mfccs.T, axis=0)
-#     return voiceprint
-
-
 import pyaudio
 import wave
 
