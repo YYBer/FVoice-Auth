@@ -6,7 +6,14 @@ This is Ethglobal Brussels 2024 project
 
 ### Issues
 
-Currently, biometric authentication primarily relies on facial recognition and fingerprint recognition. Nowadays, we can achieve encryption and authentication through users' voices and store this information on the blockchain. This method can be directly integrated into Google login or used to log into wallets for on-chain operations.
+Currently, biometric authentication primarily uses facial recognition and fingerprint recognition. We can now utilize user voice authentication for encryption and store it on the blockchain, allowing direct login to the wallet for on-chain operations.
+
+WalletConnect currently only supports QR code verification. We can have two methods:
+
+1. Use voice authentication as 2FA. After voice verification, use QR code verification.
+2. Directly use the encrypted voice as the private key to log in to WalletConnect.
+
+Using our method can significantly improve the user experience, allowing users to interact with the wallet immediately after verification.
 
 ###
 
@@ -18,7 +25,7 @@ Use the Voiceprint for Authentication:
 2. Detect if it is the same person's voiceprint
 3. Storing after encrypt and Comparing encrypted Voiceprints
 4. Directly open walletConnect to let user scan QRcode
-5. Integrate OpenAI whisper transform user voice to text, if we detect swap key word than execute swap
+5. Integrate OpenAI whisper transform user voice to text after successfully compare user voice encrypted data, if we detect swap key word than execute swap connect with 1inch
 
 ### Run it
 
