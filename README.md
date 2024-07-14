@@ -1,9 +1,5 @@
 This is Ethglobal Brussels 2024 project
 
-1. Generate a Voiceprint
-2. Store the Encrypted Voiceprint in the IPFS Calibration and used ZK-SNARKs to protect authenticity and privacy.
-3. Integrate with WalletConnect
-
 ### Issues
 
 Currently, biometric authentication primarily uses facial recognition and fingerprint recognition. We can now utilize user voice authentication for encryption and store it on the blockchain, allowing direct login to the wallet for on-chain operations.
@@ -16,16 +12,32 @@ WalletConnect currently only supports QR code verification. We can have two meth
 Using our method can significantly improve the user experience, allowing users to interact with the wallet immediately after verification.
 
 ###
-
-Use a pyAudio and library to extract features such as Mel-Frequency Cepstral Coefficients (MFCCs) from the voice sample.
-
-Use the Voiceprint for Authentication:
-
-1. Detect if the specified text is spoken in speech
-2. Detect if it is the same person's voiceprint
-3. Storing after encrypt and Comparing encrypted Voiceprints
-4. Directly open walletConnect to let user scan QRcode
-5. Integrate OpenAI whisper transform user voice to text after successfully compare user voice encrypted data, if we detect swap key word than execute swap connect with 1inch
+Workflow:
+1. Registration
+User Registers: User begins the registration process on the application.
+Record Voice: The application prompts the user to record their voice.
+Extract Voiceprint: The recorded voice is processed to extract a voiceprint.
+Store Voiceprint on IPFS: The extracted voiceprint is stored on IPFS, and an IPFS hash is generated.
+Store IPFS Hash on Blockchain: The application requests the user to confirm a transaction using their wallet (e.g., MetaMask) to store the IPFS hash on the blockchain.
+2. Login
+User Logs In: User initiates the login process on the application.
+Record Voice: The application prompts the user to record their voice.
+Get Stored Voiceprint IPFS Hash from Blockchain: The application retrieves the IPFS hash of the registered voiceprint from the blockchain.
+Download Stored Voiceprint from IPFS: Using the IPFS hash, the application downloads the registered voiceprint from IPFS.
+Extract and Compare Voiceprints: The recorded voiceprint from the login process is extracted and compared with the downloaded registered voiceprint.
+Compare Voiceprints:
+If the voiceprints match (within a defined threshold):
+Success: The user is authenticated, and the wallet login QR code is displayed or scanned.
+If the voiceprints do not match:
+Failure: The user is rejected, and an appropriate message is displayed.
+Implementation Steps
+1. Frontend (React)
+Record Voice: Use the VoiceRecorder component to record the voice.
+Upload to IPFS and Store Hash on Blockchain: Prompt the user to confirm the transaction using MetaMask to store the IPFS hash on the blockchain during registration.
+Retrieve Hash and Compare: During login, retrieve the IPFS hash from the blockchain and compare the recorded voiceprint with the stored voiceprint.
+2. Backend (Django)
+Extract Voiceprint: Process the recorded voice to extract the voiceprint.
+Handle IPFS and Blockchain Interaction: Handle storing and retrieving the IPFS hash and voiceprints, and perform the comparison.
 
 ### Run it
 
