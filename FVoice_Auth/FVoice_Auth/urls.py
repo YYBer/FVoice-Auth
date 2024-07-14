@@ -21,11 +21,22 @@ Including another URLconf
 #     path('admin/', admin.site.urls),
 # ]
 
+# from django.contrib import admin
+# from django.urls import include, path
+
+# urlpatterns = [
+#     path('admin/', admin.site.urls),
+#     path('authapp/', include('authapp.urls')),
+#     path('api-auth/', include('rest_framework.urls')),
+# ]
+
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import path
+from authapp.views import RecordVoiceView, ExtractVoiceprintView, CompareVoiceprintView  # Import views from authapp
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('authapp/', include('authapp.urls')),
-    path('api-auth/', include('rest_framework.urls')),
+    path('record_voice/', RecordVoiceView.as_view(), name='record_voice'),
+    path('extract_voiceprint/', ExtractVoiceprintView.as_view(), name='extract_voiceprint'),
+    path('compare_voiceprint/', CompareVoiceprintView.as_view(), name='compare_voiceprint'),
 ]

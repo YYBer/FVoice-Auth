@@ -1,29 +1,18 @@
-// // SPDX-License-Identifier: MIT
-// pragma solidity ^0.8.7;
+pragma solidity ^0.8.17;
 
-// contract trans{
-//     string public result;
-//     // function save(string memory _msg) public{
-//     //     result = _msg;
-//     // }
-//     function save(bytes memory binary_result) public {
-//         result = string(binary_result);
-//     }
-// }
+import "forge-std/Script.sol";
+import "../src/AudioRegistry.sol";
 
-pragma solidity ^0.8.20;
+contract AudioRegistryScript is Script {
+    function setUp() public {}
 
-import {FHE, euint8, inEuint8} from "@fhenixprotocol/contracts/FHE.sol";
-
-contract Example {
-    
-    euint8 _output;
-
-    function setOutput(inEuint8 calldata _encryptedNumber) public  {
-        _output = FHE.asEuint8(_encryptedNumber);
-    }
-
-    function getOutputEncrypted(bytes32 publicKey) public view returns (bytes memory) {
-        return _output.seal(publicKey);
+    function run() public {
+        // uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        // vm.startBroadcast(deployerPrivateKey);
+        address micAddress = vm.envAddress("MICROPHONE_ADDRESS");
+        vm.startBroadcast();
+        AudioRegistry registry = new AudioRegistry(0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82);
+        console.log("Registry address", address(registry));
+        registry.registerMicrophone(micAddress);
     }
 }
