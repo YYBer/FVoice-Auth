@@ -30,6 +30,12 @@ const config = defaultWagmiConfig({
   chains,
   projectId,
   metadata,
+  auth: {
+    email: true, // default to true
+    socials: ['google', 'x', 'github', 'discord', 'apple'],
+    showWallets: true, // default to true
+    walletFeatures: true // default to true
+  }
   // Optional - Override createConfig parameters
 });
 
