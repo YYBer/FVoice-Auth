@@ -99,7 +99,7 @@ class ExtractVoiceprintView(APIView):
         full_path = os.path.join(settings.MEDIA_ROOT, file_path)
         
         script_path = os.path.join(settings.BASE_DIR, 'backend', 'extract_voiceprint.py')
-        result = subprocess.run(['python', script_path, full_path], capture_output=True, text=True)
+        result = subprocess.run(['python3', script_path, full_path], capture_output=True, text=True)
         
         if result.returncode != 0:
             logger.error(f"Error extracting voiceprint: {result.stderr}")
@@ -117,7 +117,7 @@ class CompareVoiceprintView(APIView):
         
         # Extract voiceprint from new sample
         script_path = os.path.join(settings.BASE_DIR, 'backend', 'extract_voiceprint.py')
-        result = subprocess.run(['python', script_path, full_path], capture_output=True, text=True)
+        result = subprocess.run(['python3', script_path, full_path], capture_output=True, text=True)
         
         if result.returncode != 0:
             logger.error(f"Error extracting voiceprint: {result.stderr}")

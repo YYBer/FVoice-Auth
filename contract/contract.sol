@@ -1,18 +1,21 @@
-pragma solidity ^0.8.17;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-import "forge-std/Script.sol";
-import "../src/AudioRegistry.sol";
+contract VoiceprintStorage {
+    // Mapping from user address to their voiceprint IPFS hash
+    mapping(address => string) private voiceprints;
 
-contract AudioRegistryScript is Script {
-    function setUp() public {}
+    // Event to emit when a voiceprint is stored
+    event VoiceprintStored(address indexed user, string ipfsHash);
 
-    function run() public {
-        // uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-        // vm.startBroadcast(deployerPrivateKey);
-        address micAddress = vm.envAddress("MICROPHONE_ADDRESS");
-        vm.startBroadcast();
-        AudioRegistry registry = new AudioRegistry(0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82);
-        console.log("Registry address", address(registry));
-        registry.registerMicrophone(micAddress);
+    // Function to store the IPFS hash of the voiceprint
+    function storeVoiceprint(string memory _ipfsHash) public {
+        voiceprints[msg.sender] = _ipfsHash;
+        emit VoiceprintStored(msg.sender, _ipfsHash);
+    }
+
+    // Function to retrieve the IPFS hash of the voiceprint
+    function getVoiceprint(address _user) public view returns (string memory) {
+        return voiceprints[_user];
     }
 }

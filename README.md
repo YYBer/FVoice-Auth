@@ -1,7 +1,7 @@
 This is Ethglobal Brussels 2024 project
 
 1. Generate a Voiceprint
-2. Store the Encrypted Voiceprint in the IPFS and used ZK-SNARKs to protect authenticity and privacy.
+2. Store the Encrypted Voiceprint in the IPFS Calibration and used ZK-SNARKs to protect authenticity and privacy.
 3. Integrate with 1inch or Worldcoin ID
 
 
