@@ -43,16 +43,11 @@ createWeb3Modal({
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        {/* {children} */}
         <App />
       </QueryClientProvider>
     </WagmiProvider>
-    {/* <App /> */}
-    {/* </Web3ModalProvider> */}
-  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
