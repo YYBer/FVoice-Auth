@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+// import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import Spinner from './Spinner';
+import { ethers } from 'ethers';
 
 const VoiceRecorder = ({ isRegistered, onRegister }) => {
     const [recording, setRecording] = useState(false);
@@ -37,16 +38,92 @@ const VoiceRecorder = ({ isRegistered, onRegister }) => {
                         setLoading(true);
                         let response;
                         if (isRegistered) {
-                            response = await axios.post('http://127.0.0.1:8000/compare_voiceprint/', { voice_sample: base64String });
+                            const userAddress = await window.ethereum.request({ method: 'eth_requestAccounts' }).then(accounts => accounts[0]);
+                            response = await axios.post('http://127.0.0.1:8000/compare_voiceprint/', { voice_sample: base64String, user_address: userAddress });
                             console.log('Response:', response.data);
+                            if (response.data.result === 'Voice authentication successful.') {
+                                // Open wallet
+                                console.log('Opening wallet...');
+                            }
                         } else {
-                            await axios.post('http://127.0.0.1:8000/record_voice/', { record_seconds: 5 });
-                            response = await axios.post('http://127.0.0.1:8000/extract_voiceprint/', { voice_sample: base64String });
-                            console.log('Voiceprint:', response.data.voiceprint);
+                            // Store voiceprint on IPFS and get the hash
+                            const formData = new FormData();
+                            formData.append('file', audioBlob, 'voiceprint.wav');
+                            const ipfsResponse = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData, {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                    'pinata_api_key': '<YOUR_PINATA_API_KEY>',
+                                    'pinata_secret_api_key': '<YOUR_PINATA_SECRET_API_KEY>'
+                                }
+                            });
+                            const ipfsHash = ipfsResponse.data.IpfsHash;
+
+                            // Request wallet to store IPFS hash on blockchain
+                            const provider = new ethers.providers.Web3Provider(window.ethereum);
+                            await provider.send("eth_requestAccounts", []);
+                            const signer = provider.getSigner();
+                            const contractAddress = "0xba2db7b4d21c13aaf23e050faceb26d4e177f333";
+                            const abi = [
+                                {
+                                    "anonymous": false,
+                                    "inputs": [
+                                        {
+                                            "indexed": true,
+                                            "internalType": "address",
+                                            "name": "user",
+                                            "type": "address"
+                                        },
+                                        {
+                                            "indexed": false,
+                                            "internalType": "string",
+                                            "name": "ipfsHash",
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "name": "VoiceprintStored",
+                                    "type": "event"
+                                },
+                                {
+                                    "inputs": [
+                                        {
+                                            "internalType": "address",
+                                            "name": "_user",
+                                            "type": "address"
+                                        }
+                                    ],
+                                    "name": "getVoiceprint",
+                                    "outputs": [
+                                        {
+                                            "internalType": "string",
+                                            "name": "",
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "stateMutability": "view",
+                                    "type": "function"
+                                },
+                                {
+                                    "inputs": [
+                                        {
+                                            "internalType": "string",
+                                            "name": "_ipfsHash",
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "name": "storeVoiceprint",
+                                    "outputs": [],
+                                    "stateMutability": "nonpayable",
+                                    "type": "function"
+                                }
+                            ];
+                            const contract = new ethers.Contract(contractAddress, abi, signer);
+                            const tx = await contract.storeVoiceprint(ipfsHash);
+                            await tx.wait();
+
+                            await axios.post('http://127.0.0.1:8000/extract_voiceprint/', { voice_sample: base64String });
                             onRegister();
                         }
                     } catch (error) {
-                        onRegister(); // need to fix it
                         console.error('Upload error:', error);
                     } finally {
                         setLoading(false);
@@ -70,19 +147,11 @@ const VoiceRecorder = ({ isRegistered, onRegister }) => {
 
     return (
         <div>
-            {
-                audioURL.length <= 0 && (
-<button onClick={recording ? stopRecording : startRecording}>
+            <button onClick={recording ? stopRecording : startRecording}>
                 {recording ? 'Stop Recording' : 'Start Recording'}
             </button>
-                )
-            }
-            
             {loading && <Spinner />}
-            {audioURL &&  audioURL.length <= 0 && <audio src={audioURL} controls />}
-            { audioURL.length > 0 && (
-                <w3m-button />
-            )}
+            {audioURL && <audio src={audioURL} controls />}
         </div>
     );
 };
